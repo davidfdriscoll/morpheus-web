@@ -1,0 +1,3 @@
+[submodule "morpheus"]
+	path = morpheus
+	url = https://github.com/perseids-tools/morpheus.git
