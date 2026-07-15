@@ -1,0 +1,63 @@
+name: build-and-deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive       # pulls in morpheus/ (source + stemlib)
+
+      # Emscripten. Pin a version you have verified; this project was built with
+      # the toolchain reported as emcc 6.0.3. If a newer clang turns a warning
+      # into an error, add the matching -Wno-error= flag in wasm/build.sh.
+      - uses: mymindstorm/setup-emscripten@v1
+        with:
+          version: 6.0.3               # or 'latest'
+
+      - name: Apply required source patch
+        run: bash wasm/prepare.sh
+
+      - name: Build WASM
+        run: bash wasm/build.sh
+
+      - name: Assemble static site
+        run: |
+          mkdir -p site
+          cp -R wasm/web/* site/
+          # bring the browser build next to index.html, then drop the ../dist/
+          # prefix in both index.html (script src) and app.js (locateFile).
+          cp wasm/dist/morpheus.js wasm/dist/morpheus.wasm wasm/dist/morpheus.data site/
+          sed -i 's#\.\./dist/##g' site/index.html site/app.js
+          # not a Jekyll site — serve assets verbatim
+          touch site/.nojekyll
+          # node-only test files aren't needed in the published site
+          rm -f site/betacode.test.cjs site/package.json
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
