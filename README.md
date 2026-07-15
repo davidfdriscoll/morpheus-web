@@ -1,5 +1,7 @@
 # morpheus-web
 
+**Live site: https://davidfdriscoll.github.io/morpheus-web/**
+
 Client-side Ancient Greek & Latin morphological analysis. The [Morpheus](https://github.com/perseids-tools/morpheus)
 parser (Perseus Project) is compiled to WebAssembly with Emscripten and runs
 entirely in the browser — no server. Deployed as a static site to GitHub Pages,
