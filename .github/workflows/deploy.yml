@@ -22,18 +22,24 @@ jobs:
         with:
           submodules: recursive       # pulls in morpheus/ (source + stemlib)
 
-      # Emscripten. Pin a version you have verified; this project was built with
-      # the toolchain reported as emcc 6.0.3. If a newer clang turns a warning
-      # into an error, add the matching -Wno-error= flag in wasm/build.sh.
-      - uses: mymindstorm/setup-emscripten@v1
-        with:
-          version: 6.0.3               # or 'latest'
+      # Emscripten. Pin the verified toolchain (emcc 6.0.3) via emsdk directly.
+      # (The mymindstorm/setup-emscripten action fails to resolve pinned SDK
+      # versions — "No tool or SDK found by name '6.0.3'".) If a newer clang
+      # turns a warning into an error, add the matching -Wno-error= flag in
+      # wasm/build.sh.
+      - name: Set up Emscripten (emsdk 6.0.3)
+        run: |
+          git clone --depth 1 https://github.com/emscripten-core/emsdk.git "$HOME/emsdk"
+          "$HOME/emsdk/emsdk" install 6.0.3
+          "$HOME/emsdk/emsdk" activate 6.0.3
 
       - name: Apply required source patch
         run: bash wasm/prepare.sh
 
       - name: Build WASM
-        run: bash wasm/build.sh
+        run: |
+          source "$HOME/emsdk/emsdk_env.sh"
+          bash wasm/build.sh
 
       - name: Assemble static site
         run: |
