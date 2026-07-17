@@ -95,7 +95,11 @@
   .card.pos-I .chip.pos, .card.pos-E .chip.pos { background: #6b6257; }
   .card-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
                border-bottom: 1px solid var(--line); padding-bottom: 10px; margin-bottom: 4px; }
-  .lemma { font-size: 30px; font-weight: 600; font-family: var(--greek); }
+  .lemma { font-size: 30px; font-weight: 600; font-family: var(--greek);
+           color: inherit; text-decoration: none; }
+  a.lemma { text-decoration: underline; text-decoration-color: var(--line);
+            text-underline-offset: 4px; }
+  a.lemma:hover { color: var(--accent2); text-decoration-color: var(--accent2); }
   .grk { font-family: var(--greek); }
   .parse { padding: 10px 0 2px; border-bottom: 1px dashed var(--line); }
   .parse:last-child { border-bottom: 0; }
@@ -137,7 +141,7 @@
         <label><input type="radio" name="lang" id="lang-greek" value="greek" checked><span>Greek</span></label>
         <label><input type="radio" name="lang" id="lang-latin" value="latin"><span>Latin</span></label>
       </span>
-      <label class="check"><input type="checkbox" id="ignore"> ignore accents / breathing</label>
+      <label class="check"><input type="checkbox" id="ignore" checked> ignore accents / breathing</label>
     </div>
     <div class="examples">
       Try:
