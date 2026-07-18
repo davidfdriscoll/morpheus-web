@@ -38,11 +38,6 @@
     font-family: var(--greek);
   }
   #word:focus { outline: 2px solid var(--accent2); border-color: transparent; }
-  button.go {
-    font-size: 16px; padding: 11px 22px; border: 0; border-radius: 8px;
-    background: var(--accent); color: #fff; cursor: pointer;
-  }
-  button.go:hover { background: #611620; }
 
   .opts { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; margin-top: 14px;
           color: var(--muted); font-size: 14px; }
@@ -134,7 +129,6 @@
     <div class="row">
       <input id="word" type="text" autocomplete="off" autocapitalize="off" spellcheck="false"
              placeholder="Type a word — λόγος, ἄνθρωπος, or Beta Code lo/gos">
-      <button class="go" type="submit">Analyze</button>
     </div>
     <div class="opts">
       <span class="seg">
